@@ -64827,6 +64827,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
 
 
 
@@ -65005,132 +65007,134 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("form", [
-      _c("div", { staticClass: "form-row align-items-center" }, [
-        _c("div", { staticClass: "col-4" }, [
-          _c(
-            "label",
-            { staticClass: "sr-only", attrs: { for: "entryTitle" } },
-            [_vm._v("Title")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.entryTitle,
-                expression: "entryTitle"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "entryTitle",
-              placeholder: "What are you working on?"
-            },
-            domProps: { value: _vm.entryTitle },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.entryTitle = $event.target.value
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [
-          _c(
-            "label",
-            { staticClass: "sr-only", attrs: { for: "entryProject" } },
-            [_vm._v("Project")]
-          ),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
+    _c("div", { staticClass: "card p-2 my-2" }, [
+      _c("form", [
+        _c("div", { staticClass: "form-row align-items-center" }, [
+          _c("div", { staticClass: "col-4" }, [
+            _c(
+              "label",
+              { staticClass: "sr-only", attrs: { for: "entryTitle" } },
+              [_vm._v("Title")]
+            ),
+            _vm._v(" "),
+            _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.entryProject,
-                  expression: "entryProject"
+                  value: _vm.entryTitle,
+                  expression: "entryTitle"
                 }
               ],
-              staticClass: "custom-select my-1 mr-sm-2",
-              attrs: { id: "entryProject" },
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "entryTitle",
+                placeholder: "What are you working on?"
+              },
+              domProps: { value: _vm.entryTitle },
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.entryProject = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.entryTitle = $event.target.value
                 }
               }
-            },
-            _vm._l(_vm.projects, function(project) {
-              return _c("option", { domProps: { value: project.id } }, [
-                _vm._v(_vm._s(project.name))
-              ])
             })
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-2" }, [
-          _c(
-            "label",
-            { staticClass: "sr-only", attrs: { for: "entryDuration" } },
-            [_vm._v("Title")]
-          ),
+          ]),
           _vm._v(" "),
-          _c("input", {
-            directives: [
+          _c("div", { staticClass: "col-3" }, [
+            _c(
+              "label",
+              { staticClass: "sr-only", attrs: { for: "entryProject" } },
+              [_vm._v("Project")]
+            ),
+            _vm._v(" "),
+            _c(
+              "select",
               {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.entryDuration,
-                expression: "entryDuration"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { type: "time", id: "entryDuration", disabled: "" },
-            domProps: { value: _vm.entryDuration },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.entryProject,
+                    expression: "entryProject"
+                  }
+                ],
+                staticClass: "custom-select my-1 mr-sm-2",
+                attrs: { id: "entryProject" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.entryProject = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
                 }
-                _vm.entryDuration = $event.target.value
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              class: _vm.playing ? "bg-danger" : "bg-success",
+              },
+              _vm._l(_vm.projects, function(project) {
+                return _c("option", { domProps: { value: project.id } }, [
+                  _vm._v(_vm._s(project.name))
+                ])
+              })
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-2" }, [
+            _c(
+              "label",
+              { staticClass: "sr-only", attrs: { for: "entryDuration" } },
+              [_vm._v("Title")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.entryDuration,
+                  expression: "entryDuration"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "time", id: "entryDuration", disabled: "" },
+              domProps: { value: _vm.entryDuration },
               on: {
-                click: function($event) {
-                  $event.stopPropagation()
-                  $event.preventDefault()
-                  return _vm.togglePlay($event)
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.entryDuration = $event.target.value
                 }
               }
-            },
-            [_vm._v(_vm._s(_vm.playing ? "Stop" : "Start"))]
-          )
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-1" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                class: _vm.playing ? "bg-danger" : "bg-success",
+                on: {
+                  click: function($event) {
+                    $event.stopPropagation()
+                    $event.preventDefault()
+                    return _vm.togglePlay($event)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.playing ? "Stop" : "Start"))]
+            )
+          ])
         ])
       ])
     ])
