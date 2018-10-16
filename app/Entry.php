@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entry extends Model
 {
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title', 'start', 'end', 'project_id'];
+
     /**
      * Get the project to which this time entry belongs.
      */

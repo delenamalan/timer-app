@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'entry'], function() {
     Route::get('/', 'EntriesController@index')->name('entries');
+    Route::post('/', 'EntriesController@store')->name('store_entry');
 });
 
 Route::group(['prefix' => 'project'], function() {

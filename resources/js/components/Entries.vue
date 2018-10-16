@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <timer :projects="projects"></timer>
         <div class="row justify-content-center">
                 <table class="table table-bordered">
             <thead>
@@ -71,7 +72,7 @@
                         return {
                             'title': entry.title,
                             'project_id': entry.project_id,
-                            'project': entry.project_id in this.projects ? this.projects[entry.project_id][0].name : '',
+                            'project': entry.project_id in this.projects ? this.projects[entry.project_id].name : '',
                             'start': moment(entry.start),
                             'end': moment(entry.end),
                             'duration': moment.utc(

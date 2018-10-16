@@ -1,0 +1,2 @@
+- [ ] paginate time entries
+- [ ] add new projects

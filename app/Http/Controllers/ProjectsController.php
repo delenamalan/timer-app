@@ -20,7 +20,7 @@ class ProjectsController extends Controller
      */
     public function index(Request $request)
     {
-        return Auth::user()->projects->groupBy('id');
+        return Auth::user()->projects->keyBy('id');
     }
 
 }

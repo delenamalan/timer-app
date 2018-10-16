@@ -64728,6 +64728,11 @@ var EntryHttp = function () {
 		value: function all() {
 			return axios.get(this.prefix);
 		}
+	}, {
+		key: 'store',
+		value: function store(data) {
+			return axios.post(this.prefix, data);
+		}
 	}]);
 
 	return EntryHttp;
@@ -64789,19 +64794,13 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(167);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_EntryHttp__ = __webpack_require__(170);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 //
 //
 //
@@ -64829,35 +64828,172 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
-        // attrTimeEvents: {
-        //     type: Array,
-        //     default: () => {[]}, 
-        // },
+        projects: {
+            type: Object,
+            default: function _default() {
+                return {};
+            }
+        }
     },
 
     data: function data() {
         return {
-            timeEvents: []
+            playing: false,
+            entryTitle: '',
+            entryProject: null,
+            entryDuration: "00:00",
+            entryStart: null,
+            entryEnd: null,
+            entryId: null,
+            entryHttp: null
         };
     },
-    mounted: function mounted() {
-        this.timeEvents = [{
-            'title': 'Coding in Laravel',
-            'project': 'Awesomesauce',
-            'start': moment([2010, 1, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-            'end': moment([2010, 1, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-            'duration': '01:14'
-        }, {
-            'title': 'Coding in JavaScript',
-            'project': 'Project2',
-            'start': moment([2010, 2, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-            'end': moment([2010, 2, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-            'duration': '01:14'
-        }];
-        //  JSON.parse(attrTimeEvents);
+    created: function created() {
+        this.entryHttp = new __WEBPACK_IMPORTED_MODULE_1__services_EntryHttp__["a" /* default */]();
+    },
+    mounted: function mounted() {},
+
+
+    methods: {
+        togglePlay: function togglePlay() {
+            this.playing = !this.playing;
+
+            if (this.playing) {
+                this.countTimer();
+                this.entryStart = moment();
+                this.createTimeEntry();
+            } else {
+                this.endTimeEntry();
+                // TODO: add to list of entries on page
+            }
+        },
+        createTimeEntry: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+                var data, response;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                data = {
+                                    'title': this.entryTitle,
+                                    'project_id': this.entryProject,
+                                    'start': this.entryStart.format('YYYY-MM-DD HH:mm:ss')
+                                };
+                                _context.prev = 1;
+                                _context.next = 4;
+                                return this.entryHttp.store(data);
+
+                            case 4:
+                                response = _context.sent;
+
+                                console.log("Stored time entry");
+                                _context.next = 11;
+                                break;
+
+                            case 8:
+                                _context.prev = 8;
+                                _context.t0 = _context['catch'](1);
+
+                                console.error(_context.t0);
+
+                            case 11:
+                            case 'end':
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this, [[1, 8]]);
+            }));
+
+            function createTimeEntry() {
+                return _ref.apply(this, arguments);
+            }
+
+            return createTimeEntry;
+        }(),
+        endTimeEntry: function () {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                this.entryEnd = new Date();
+                                this.saveTimeEntry();
+
+                            case 2:
+                            case 'end':
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, this);
+            }));
+
+            function endTimeEntry() {
+                return _ref2.apply(this, arguments);
+            }
+
+            return endTimeEntry;
+        }(),
+        saveTimeEntry: function () {
+            var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee3() {
+                var data;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+                    while (1) {
+                        switch (_context3.prev = _context3.next) {
+                            case 0:
+                                data = {
+                                    'title': this.entryTitle,
+                                    'project_id': this.entryProject,
+                                    'start': this.entryStart,
+                                    'end': this.entryStart
+                                };
+
+                                // TODO: save
+
+                            case 1:
+                            case 'end':
+                                return _context3.stop();
+                        }
+                    }
+                }, _callee3, this);
+            }));
+
+            function saveTimeEntry() {
+                return _ref3.apply(this, arguments);
+            }
+
+            return saveTimeEntry;
+        }(),
+        countTimer: function () {
+            var _ref4 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee4() {
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+                    while (1) {
+                        switch (_context4.prev = _context4.next) {
+                            case 0:
+                                if (this.playing) {
+                                    this.entryDuration = this.entryDuration.substring(0, 4) + (Number(this.entryDuration.substring(4)) + 1);
+                                    window.setTimeout(this.countTimer, 1000);
+                                }
+
+                            case 1:
+                            case 'end':
+                                return _context4.stop();
+                        }
+                    }
+                }, _callee4, this);
+            }));
+
+            function countTimer() {
+                return _ref4.apply(this, arguments);
+            }
+
+            return countTimer;
+        }()
     }
+
 });
 
 /***/ }),
@@ -64869,96 +65005,138 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("table", { staticClass: "table table-bordered" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.timeEvents, function(event) {
-            return _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(event.title))
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.project))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.start.format("YYYY MM DD h:ss")))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.end.format("YYYY MM DD h:ss")))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.duration))]),
-              _vm._v(" "),
-              _vm._m(1, true)
-            ])
+    _c("form", [
+      _c("div", { staticClass: "form-row align-items-center" }, [
+        _c("div", { staticClass: "col-4" }, [
+          _c(
+            "label",
+            { staticClass: "sr-only", attrs: { for: "entryTitle" } },
+            [_vm._v("Title")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.entryTitle,
+                expression: "entryTitle"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "entryTitle",
+              placeholder: "What are you working on?"
+            },
+            domProps: { value: _vm.entryTitle },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.entryTitle = $event.target.value
+              }
+            }
           })
-        )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-3" }, [
+          _c(
+            "label",
+            { staticClass: "sr-only", attrs: { for: "entryProject" } },
+            [_vm._v("Project")]
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.entryProject,
+                  expression: "entryProject"
+                }
+              ],
+              staticClass: "custom-select my-1 mr-sm-2",
+              attrs: { id: "entryProject" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.entryProject = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.projects, function(project) {
+              return _c("option", { domProps: { value: project.id } }, [
+                _vm._v(_vm._s(project.name))
+              ])
+            })
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-2" }, [
+          _c(
+            "label",
+            { staticClass: "sr-only", attrs: { for: "entryDuration" } },
+            [_vm._v("Title")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.entryDuration,
+                expression: "entryDuration"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "time", id: "entryDuration", disabled: "" },
+            domProps: { value: _vm.entryDuration },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.entryDuration = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-1" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              class: _vm.playing ? "bg-danger" : "bg-success",
+              on: {
+                click: function($event) {
+                  $event.stopPropagation()
+                  $event.preventDefault()
+                  return _vm.togglePlay($event)
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.playing ? "Stop" : "Start"))]
+          )
+        ])
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Project")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Start")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("End")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Duration")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("th", { attrs: { scope: "col" } }, [
-      _c("div", { staticClass: "dropdown" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-secondary dropdown-toggle",
-            attrs: {
-              type: "button",
-              id: "dropdownMenuButton",
-              "data-toggle": "dropdown",
-              "aria-haspopup": "true",
-              "aria-expanded": "false"
-            }
-          },
-          [_vm._v("\n                        Actions\n                    ")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "dropdown-menu",
-            attrs: { "aria-labelledby": "dropdownMenuButton" }
-          },
-          [
-            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-              _vm._v("Duplicate")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-              _vm._v("Delete")
-            ])
-          ]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -65078,6 +65256,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
 
 
 
@@ -65121,7 +65300,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     return {
                                         'title': entry.title,
                                         'project_id': entry.project_id,
-                                        'project': entry.project_id in _this.projects ? _this.projects[entry.project_id][0].name : '',
+                                        'project': entry.project_id in _this.projects ? _this.projects[entry.project_id].name : '',
                                         'start': moment(entry.start),
                                         'end': moment(entry.end),
                                         'duration': moment.utc(moment(entry.end).diff(moment(entry.start))).format('h:ss')
@@ -65202,34 +65381,43 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("table", { staticClass: "table table-bordered" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.entries, function(event) {
-            return _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(event.title))
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.project))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.start.format("YYYY/MM/DD h:ss")))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.end.format("YYYY/MM/DD h:ss")))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.duration))]),
-              _vm._v(" "),
-              _vm._m(1, true)
-            ])
-          })
-        )
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("timer", { attrs: { projects: _vm.projects } }),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("table", { staticClass: "table table-bordered" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.entries, function(event) {
+              return _c("tr", [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _vm._v(_vm._s(event.title))
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(event.project))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(_vm._s(event.start.format("YYYY/MM/DD h:ss")))
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(event.end.format("YYYY/MM/DD h:ss")))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(event.duration))]),
+                _vm._v(" "),
+                _vm._m(1, true)
+              ])
+            })
+          )
+        ])
       ])
-    ])
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {

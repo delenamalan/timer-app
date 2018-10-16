@@ -20,8 +20,8 @@ class CreateEntriesTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->dateTime('start');
-            $table->dateTime('end');
+            $table->dateTime('start')->nullable();
+            $table->dateTime('end')->nullable();
             $table->timestamps();
         });
     }

@@ -1,76 +1,116 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-                <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Project</th>
-                <th scope="col">Start</th>
-                <th scope="col">End</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="event in timeEvents">
-                <th scope="row">{{ event.title }}</th>
-                <td>{{ event.project }}</td>
-                <td>{{ event.start.format('YYYY MM DD h:ss') }}</td>
-                <td>{{ event.end.format('YYYY MM DD h:ss') }}</td>
-                <td>{{ event.duration }}</td>
-                <th scope="col">
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Actions
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Duplicate</a>
-                            <a class="dropdown-item" href="#">Delete</a>
-                        </div>
-                    </div>
-                </th>
-                </tr>
-            </tbody>
-            </table>
-        </div>
+        <form>
+            <div class="form-row align-items-center">
+                <div class="col-4">
+                    <label class="sr-only" for="entryTitle">Title</label>
+                    <input type="text" v-model="entryTitle" class="form-control" id="entryTitle" placeholder="What are you working on?">
+                </div>
+                <div class="col-3">
+                    <label class="sr-only" for="entryProject">Project</label>
+                    <select v-model="entryProject" class="custom-select my-1 mr-sm-2" id="entryProject">
+                       <option v-for="project in projects" :value="project.id" >{{ project.name }}</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="sr-only" for="entryDuration">Title</label>
+                    <input type="time" v-model="entryDuration" class="form-control" id="entryDuration" disabled></input>
+                </div>
+                <div class="col-1">
+                    <button @click.stop.prevent="togglePlay" class="btn btn-primary" :class="playing ? 'bg-danger' : 'bg-success'">{{ playing ? 'Stop' : 'Start' }}</button>
+                </div>
+            </div>
+    </form>
     </div>
 </template>
 
 <script>
+    import EntryHttp from '../services/EntryHttp';
+
     export default {
         props: {
-            // attrTimeEvents: {
-            //     type: Array,
-            //     default: () => {[]}, 
-            // },
+            projects: {
+                type: Object,
+                default: () => ({})
+            }
         },
 
         data()
         {
             return {
-                timeEvents: [],
+                playing: false,
+                entryTitle: '',
+                entryProject: null,
+                entryDuration: "00:00",
+                entryStart: null,
+                entryEnd: null,
+                entryId: null,
+                entryHttp: null,
             }
         },
 
+        created() {
+            this.entryHttp = new EntryHttp;
+        },
+
         mounted() {
-            this.timeEvents = [
-                {
-                    'title': 'Coding in Laravel',
-                    'project': 'Awesomesauce',
-                    'start': moment([2010, 1, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-                    'end': moment([2010, 1, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-                    'duration': '01:14',
-                }, 
-                {
-                    'title': 'Coding in JavaScript',
-                    'project': 'Project2',
-                    'start': moment([2010, 2, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-                    'end': moment([2010, 2, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-                    'duration': '01:14',
-                }, 
-            ]
-            //  JSON.parse(attrTimeEvents);
+        },
+
+        methods:
+        {
+            togglePlay() {
+                this.playing = !this.playing;
+
+                if (this.playing) {
+                    this.countTimer();
+                    this.entryStart = moment();
+                    this.createTimeEntry();
+                } else {
+                    this.endTimeEntry();
+                    // TODO: add to list of entries on page
+                }
+            },
+
+            async createTimeEntry() {
+                let data = {
+                    'title': this.entryTitle,
+                    'project_id': this.entryProject,
+                    'start': this.entryStart.format('YYYY-MM-DD HH:mm:ss'),
+                };
+
+                try {
+                    let response = await this.entryHttp.store(data);
+                    console.log("Stored time entry");
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+
+            async endTimeEntry() {
+                this.entryEnd = new Date();
+                this.saveTimeEntry();
+            },
+
+            async saveTimeEntry() {
+                let data = {
+                    'title': this.entryTitle,
+                    'project_id': this.entryProject,
+                    'start': this.entryStart,
+                    'end': this.entryStart,
+                };
+
+                // TODO: save
+            },
+
+            async countTimer() {
+                if (this.playing) {
+                    this.entryDuration = this.entryDuration.substring(0,4) + (Number(this.entryDuration.substring(4)) + 1);
+                    window.setTimeout(this.countTimer, 1000);
+                }
+            }
+
+
         }
+
     }
 </script>

@@ -4,6 +4,7 @@ class EntryHttp {
 	}
 	
 	all () { return axios.get(this.prefix) }
+	store (data) { return axios.post(this.prefix, data) }
 }
 
 export default EntryHttp;

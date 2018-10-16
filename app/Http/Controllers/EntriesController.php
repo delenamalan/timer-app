@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 use App\Entry;
+use App\Project;
 
 class EntriesController extends Controller
 {
@@ -23,30 +24,26 @@ class EntriesController extends Controller
      */
     public function index()
     {
-        Log::info("Logged in user is ");
-        Log::info(Auth::user());
         return Auth::user()->entries;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created time entry in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * 
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|max:100',
+            'project_id' => 'nullable|exists:projects,id',
+            'start' => 'required|date',
+            'end' => 'nullable|date|after:start',
+        ]);
+
+        Auth::user()->entries()->create($validatedData);
     }
 
     /**
