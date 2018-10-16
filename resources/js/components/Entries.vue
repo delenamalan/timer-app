@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <button @click="getEntries">Get Entries</button>
         <div class="row justify-content-center">
                 <table class="table table-bordered">
             <thead>
@@ -16,7 +15,7 @@
             <tbody>
                 <tr v-for="event in entries">
                 <th scope="row">{{ event.title }}</th>
-                <td>{{ event.project_id }}</td>
+                <td>{{ event.project }}</td>
                 <td>{{ event.start.format('YYYY/MM/DD h:ss') }}</td>
                 <td>{{ event.end.format('YYYY/MM/DD h:ss') }}</td>
                 <td>{{ event.duration }}</td>
@@ -40,6 +39,7 @@
 
 <script>
     import EntryHttp from '../services/EntryHttp';
+    import ProjectHttp from '../services/ProjectHttp';
 
     export default {
         props: {
@@ -49,14 +49,17 @@
         {
             return {
                 entries: [],
+                projects: {},
                 entryHttp: null,
+                projectHttp: null,
             }
         },
 
         created()
         {
             this.entryHttp = new EntryHttp;
-            this.getEntries();
+            this.projectHttp = new ProjectHttp;
+            this.getProjects();
         },
 
         methods:
@@ -67,18 +70,30 @@
                     this.entries = response.data.map(entry => {
                         return {
                             'title': entry.title,
-                            'project': entry.project_id,
+                            'project_id': entry.project_id,
+                            'project': entry.project_id in this.projects ? this.projects[entry.project_id][0].name : '',
                             'start': moment(entry.start),
                             'end': moment(entry.end),
                             'duration': moment.utc(
                                 moment(entry.end).diff(moment(entry.start))
                             ).format('h:ss'),
                        };
-                    })
+                    });
                 } catch (error) {
                     console.error(error);
                 }
-            }
+            },
+
+            async getProjects() {
+                try {
+                    let response = await this.projectHttp.all();
+                    this.projects = response.data;                   
+                    this.getEntries();
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+
         },
 
         mounted() {

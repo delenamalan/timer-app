@@ -17,4 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/entry', 'EntriesController@index')->name('entries');
+Route::group(['prefix' => 'entry'], function() {
+    Route::get('/', 'EntriesController@index')->name('entries');
+});
+
+Route::group(['prefix' => 'project'], function() {
+    Route::get('/', 'ProjectsController@index')->name('projects');
+});

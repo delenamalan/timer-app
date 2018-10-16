@@ -17,14 +17,11 @@ class EntriesController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Return all of the time entries belonging to the logged in user.
      *
-     * @param  Request  $request
-     * @param  int  $id
-     * 
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         Log::info("Logged in user is ");
         Log::info(Auth::user());

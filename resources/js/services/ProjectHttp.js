@@ -1,4 +1,4 @@
-class EntryHttp {
+class ProjectHttp {
 	constructor() {
 		this.prefix = '/api/project';
 	}

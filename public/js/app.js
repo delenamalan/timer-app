@@ -65034,6 +65034,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_EntryHttp__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_ProjectHttp__ = __webpack_require__(183);
 
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -65077,7 +65078,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
-//
+
 
 
 
@@ -65087,18 +65088,23 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     data: function data() {
         return {
             entries: [],
-            entryHttp: null
+            projects: {},
+            entryHttp: null,
+            projectHttp: null
         };
     },
     created: function created() {
         this.entryHttp = new __WEBPACK_IMPORTED_MODULE_1__services_EntryHttp__["a" /* default */]();
-        this.getEntries();
+        this.projectHttp = new __WEBPACK_IMPORTED_MODULE_2__services_ProjectHttp__["a" /* default */]();
+        this.getProjects();
     },
 
 
     methods: {
         getEntries: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+                var _this = this;
+
                 var response;
                 return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
                     while (1) {
@@ -65114,7 +65120,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 this.entries = response.data.map(function (entry) {
                                     return {
                                         'title': entry.title,
-                                        'project': entry.project_id,
+                                        'project_id': entry.project_id,
+                                        'project': entry.project_id in _this.projects ? _this.projects[entry.project_id][0].name : '',
                                         'start': moment(entry.start),
                                         'end': moment(entry.end),
                                         'duration': moment.utc(moment(entry.end).diff(moment(entry.start))).format('h:ss')
@@ -65142,6 +65149,45 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             }
 
             return getEntries;
+        }(),
+        getProjects: function () {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
+                var response;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+                    while (1) {
+                        switch (_context2.prev = _context2.next) {
+                            case 0:
+                                _context2.prev = 0;
+                                _context2.next = 3;
+                                return this.projectHttp.all();
+
+                            case 3:
+                                response = _context2.sent;
+
+                                this.projects = response.data;
+                                this.getEntries();
+                                _context2.next = 11;
+                                break;
+
+                            case 8:
+                                _context2.prev = 8;
+                                _context2.t0 = _context2['catch'](0);
+
+                                console.error(_context2.t0);
+
+                            case 11:
+                            case 'end':
+                                return _context2.stop();
+                        }
+                    }
+                }, _callee2, this, [[0, 8]]);
+            }));
+
+            function getProjects() {
+                return _ref2.apply(this, arguments);
+            }
+
+            return getProjects;
         }()
     },
 
@@ -65157,8 +65203,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("button", { on: { click: _vm.getEntries } }, [_vm._v("Get Entries")]),
-    _vm._v(" "),
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("table", { staticClass: "table table-bordered" }, [
         _vm._m(0),
@@ -65171,7 +65215,7 @@ var render = function() {
                 _vm._v(_vm._s(event.title))
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(event.project_id))]),
+              _c("td", [_vm._v(_vm._s(event.project))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(event.start.format("YYYY/MM/DD h:ss")))]),
               _vm._v(" "),
@@ -65257,6 +65301,34 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-63d2e5f5", module.exports)
   }
 }
+
+/***/ }),
+/* 183 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ProjectHttp = function () {
+	function ProjectHttp() {
+		_classCallCheck(this, ProjectHttp);
+
+		this.prefix = '/api/project';
+	}
+
+	_createClass(ProjectHttp, [{
+		key: 'all',
+		value: function all() {
+			return axios.get(this.prefix);
+		}
+	}]);
+
+	return ProjectHttp;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ProjectHttp);
 
 /***/ })
 /******/ ]);
