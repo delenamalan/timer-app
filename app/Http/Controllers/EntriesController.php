@@ -43,50 +43,37 @@ class EntriesController extends Controller
             'end' => 'nullable|date|after:start',
         ]);
 
-        Auth::user()->entries()->create($validatedData);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\entries  $entries
-     * @return \Illuminate\Http\Response
-     */
-    public function show(entries $entries)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\entries  $entries
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(entries $entries)
-    {
-        //
+        return Auth::user()->entries()->create($validatedData);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\entries  $entries
+     * @param  \App\Entry $entry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, entries $entries)
+    public function update(Request $request, Entry $entry)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|max:100',
+            'project_id' => 'nullable|exists:projects,id',
+            'start' => 'required|date',
+            'end' => 'nullable|date|after:start',
+        ]);
+
+        $entry->fill($validatedData);
+        $entry->save();
+        return "Succesfully saved entry!";
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\entries  $entries
+     * @param  \App\Entry $entry
      * @return \Illuminate\Http\Response
      */
-    public function destroy(entries $entries)
+    public function destroy(Entry $entry)
     {
         //
     }

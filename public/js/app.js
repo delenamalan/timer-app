@@ -64733,6 +64733,11 @@ var EntryHttp = function () {
 		value: function store(data) {
 			return axios.post(this.prefix, data);
 		}
+	}, {
+		key: 'update',
+		value: function update(entry_id, data) {
+			return axios.put(this.prefix + ('/' + entry_id), data);
+		}
 	}]);
 
 	return EntryHttp;
@@ -64851,7 +64856,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             entryStart: null,
             entryEnd: null,
             entryId: null,
-            entryHttp: null
+            entryHttp: null,
+            hours: 0,
+            minutes: 0,
+            seconds: 0
         };
     },
     created: function created() {
@@ -64892,22 +64900,23 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                             case 4:
                                 response = _context.sent;
 
+                                this.entryId = response.data.id;
                                 console.log("Stored time entry");
-                                _context.next = 11;
+                                _context.next = 12;
                                 break;
 
-                            case 8:
-                                _context.prev = 8;
+                            case 9:
+                                _context.prev = 9;
                                 _context.t0 = _context['catch'](1);
 
                                 console.error(_context.t0);
 
-                            case 11:
+                            case 12:
                             case 'end':
                                 return _context.stop();
                         }
                     }
-                }, _callee, this, [[1, 8]]);
+                }, _callee, this, [[1, 9]]);
             }));
 
             function createTimeEntry() {
@@ -64922,7 +64931,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
-                                this.entryEnd = new Date();
+                                this.entryEnd = moment();
                                 this.saveTimeEntry();
 
                             case 2:
@@ -64941,7 +64950,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         }(),
         saveTimeEntry: function () {
             var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee3() {
-                var data;
+                var data, response;
                 return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
                     while (1) {
                         switch (_context3.prev = _context3.next) {
@@ -64949,18 +64958,32 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 data = {
                                     'title': this.entryTitle,
                                     'project_id': this.entryProject,
-                                    'start': this.entryStart,
-                                    'end': this.entryStart
+                                    'start': this.entryStart.format('YYYY-MM-DD HH:mm:ss'),
+                                    'end': this.entryEnd.format('YYYY-MM-DD HH:mm:ss')
                                 };
+                                _context3.prev = 1;
+                                _context3.next = 4;
+                                return this.entryHttp.update(this.entryId, data);
 
-                                // TODO: save
+                            case 4:
+                                response = _context3.sent;
 
-                            case 1:
+                                console.log("Stored time entry");
+                                _context3.next = 11;
+                                break;
+
+                            case 8:
+                                _context3.prev = 8;
+                                _context3.t0 = _context3['catch'](1);
+
+                                console.error(_context3.t0);
+
+                            case 11:
                             case 'end':
                                 return _context3.stop();
                         }
                     }
-                }, _callee3, this);
+                }, _callee3, this, [[1, 8]]);
             }));
 
             function saveTimeEntry() {
@@ -64976,7 +64999,17 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                         switch (_context4.prev = _context4.next) {
                             case 0:
                                 if (this.playing) {
-                                    this.entryDuration = this.entryDuration.substring(0, 4) + (Number(this.entryDuration.substring(4)) + 1);
+                                    this.seconds += 1;
+                                    if (this.seconds == 60) {
+                                        this.minutes += 1;
+                                        this.seconds = 0;
+                                    }
+                                    if (this.minutes == 60) {
+                                        this.hours += 1;
+                                        this.minutes = 0;
+                                    }
+
+                                    this.entryDuration = this.hours + ':' + this.minutes + ':' + this.seconds;
                                     window.setTimeout(this.countTimer, 1000);
                                 }
 
@@ -65105,7 +65138,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "time", id: "entryDuration", disabled: "" },
+              attrs: { type: "text", id: "entryDuration", disabled: "" },
               domProps: { value: _vm.entryDuration },
               on: {
                 input: function($event) {

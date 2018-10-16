@@ -15,7 +15,7 @@
                     </div>
                     <div class="col-2">
                         <label class="sr-only" for="entryDuration">Title</label>
-                        <input type="time" v-model="entryDuration" class="form-control" id="entryDuration" disabled></input>
+                        <input type="text" v-model="entryDuration" class="form-control" id="entryDuration" disabled></input>
                     </div>
                     <div class="col-1">
                         <button @click.stop.prevent="togglePlay" class="btn btn-primary" :class="playing ? 'bg-danger' : 'bg-success'">{{ playing ? 'Stop' : 'Start' }}</button>
@@ -48,6 +48,9 @@
                 entryEnd: null,
                 entryId: null,
                 entryHttp: null,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
             }
         },
 
@@ -82,6 +85,7 @@
 
                 try {
                     let response = await this.entryHttp.store(data);
+                    this.entryId = response.data.id;
                     console.log("Stored time entry");
                 } catch (error) {
                     console.error(error);
@@ -89,7 +93,7 @@
             },
 
             async endTimeEntry() {
-                this.entryEnd = new Date();
+                this.entryEnd = moment();
                 this.saveTimeEntry();
             },
 
@@ -97,16 +101,31 @@
                 let data = {
                     'title': this.entryTitle,
                     'project_id': this.entryProject,
-                    'start': this.entryStart,
-                    'end': this.entryStart,
+                    'start': this.entryStart.format('YYYY-MM-DD HH:mm:ss'),
+                    'end': this.entryEnd.format('YYYY-MM-DD HH:mm:ss'),
                 };
 
-                // TODO: save
+                try {
+                    let response = await this.entryHttp.update(this.entryId, data);
+                    console.log("Stored time entry");
+                } catch (error) {
+                    console.error(error);
+                }
             },
 
             async countTimer() {
                 if (this.playing) {
-                    this.entryDuration = this.entryDuration.substring(0,4) + (Number(this.entryDuration.substring(4)) + 1);
+                    this.seconds += 1;
+                    if (this.seconds == 60) {
+                        this.minutes += 1;
+                        this.seconds = 0;
+                    }
+                    if (this.minutes == 60) {
+                        this.hours += 1;
+                        this.minutes = 0;
+                    }
+
+                    this.entryDuration = `${this.hours}:${this.minutes}:${this.seconds}`;
                     window.setTimeout(this.countTimer, 1000);
                 }
             }
