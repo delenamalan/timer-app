@@ -14,4 +14,12 @@ class Project extends Model
     {
         return $this->hasMany('App\Entry');
     }
+
+    /**
+     * Get the owner of this project.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

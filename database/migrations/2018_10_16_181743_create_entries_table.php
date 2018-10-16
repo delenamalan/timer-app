@@ -18,6 +18,8 @@ class CreateEntriesTable extends Migration
             $table->string('title', 150);
             $table->unsignedInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->timestamps();

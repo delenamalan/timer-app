@@ -13,4 +13,12 @@ class Entry extends Model
     {
         return $this->belongsTo('App\Project');
     }
+
+    /**
+     * Get the owner of this project.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }
