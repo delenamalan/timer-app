@@ -15,7 +15,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('entries', require('./components/Entries.vue'));
 Vue.component('timer', require('./components/Timer.vue'));
 
 const app = new Vue({

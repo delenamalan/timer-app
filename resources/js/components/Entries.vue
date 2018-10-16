@@ -14,11 +14,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="event in timeEvents">
+                <tr v-for="event in entries">
                 <th scope="row">{{ event.title }}</th>
-                <td>{{ event.project }}</td>
-                <td>{{ event.start.format('YYYY MM DD h:ss') }}</td>
-                <td>{{ event.end.format('YYYY MM DD h:ss') }}</td>
+                <td>{{ event.project_id }}</td>
+                <td>{{ event.start.format('YYYY/MM/DD h:ss') }}</td>
+                <td>{{ event.end.format('YYYY/MM/DD h:ss') }}</td>
                 <td>{{ event.duration }}</td>
                 <th scope="col">
                     <div class="dropdown">
@@ -43,16 +43,12 @@
 
     export default {
         props: {
-            // attrTimeEvents: {
-            //     type: Array,
-            //     default: () => {[]}, 
-            // },
         },
 
         data()
         {
             return {
-                timeEvents: [],
+                entries: [],
                 entryHttp: null,
             }
         },
@@ -60,6 +56,7 @@
         created()
         {
             this.entryHttp = new EntryHttp;
+            this.getEntries();
         },
 
         methods:
@@ -67,8 +64,17 @@
             async getEntries() {
                 try {
                     let response = await this.entryHttp.all();
-                    window.response = response;
-                    // success
+                    this.entries = response.data.map(entry => {
+                        return {
+                            'title': entry.title,
+                            'project': entry.project_id,
+                            'start': moment(entry.start),
+                            'end': moment(entry.end),
+                            'duration': moment.utc(
+                                moment(entry.end).diff(moment(entry.start))
+                            ).format('h:ss'),
+                       };
+                    })
                 } catch (error) {
                     console.error(error);
                 }
@@ -76,23 +82,6 @@
         },
 
         mounted() {
-            this.timeEvents = [
-                {
-                    'title': 'Coding in Laravel',
-                    'project': 'Awesomesauce',
-                    'start': moment([2010, 1, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-                    'end': moment([2010, 1, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-                    'duration': '01:14',
-                }, 
-                {
-                    'title': 'Coding in JavaScript',
-                    'project': 'Project2',
-                    'start': moment([2010, 2, 14, 15, 25, 50, 125]), // 2010 February 14th, 3:25:50.125 PM
-                    'end': moment([2010, 2, 14, 16, 35, 50, 125]), // 2010 February 14th, 4:35:50.125 PM
-                    'duration': '01:14',
-                }, 
-            ]
-            //  JSON.parse(attrTimeEvents);
         }
     }
 </script>
