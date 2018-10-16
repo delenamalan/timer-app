@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <button @click="getEntries">Get Entries</button>
         <div class="row justify-content-center">
                 <table class="table table-bordered">
             <thead>
@@ -39,8 +38,6 @@
 </template>
 
 <script>
-    import EntryHttp from '../services/EntryHttp';
-
     export default {
         props: {
             // attrTimeEvents: {
@@ -53,25 +50,6 @@
         {
             return {
                 timeEvents: [],
-                entryHttp: null,
-            }
-        },
-
-        created()
-        {
-            this.entryHttp = new EntryHttp;
-        },
-
-        methods:
-        {
-            async getEntries() {
-                try {
-                    let response = await this.entryHttp.all();
-                    window.response = response;
-                    // success
-                } catch (error) {
-                    console.error(error);
-                }
             }
         },
 

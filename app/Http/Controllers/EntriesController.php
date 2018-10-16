@@ -2,19 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\entries;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+use App\Entry;
 
 class EntriesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param  Request  $request
+     * @param  int  $id
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        Log::info("Logged in user is ");
+        Log::info(Auth::user());
+        return Auth::user()->entries;
     }
 
     /**
