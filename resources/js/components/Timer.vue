@@ -18,7 +18,7 @@
                         <input type="text" v-model="entryDuration" class="form-control" id="entryDuration" disabled></input>
                     </div>
                     <div class="col-1">
-                        <button @click.stop.prevent="togglePlay" class="btn btn-primary" :class="playing ? 'bg-danger' : 'bg-success'">{{ playing ? 'Stop' : 'Start' }}</button>
+                        <button :disabled="!(entryTitle && entryProject)" @click.stop.prevent="togglePlay" class="btn btn-primary" :class="playing ? 'bg-danger' : 'bg-success'">{{ playing ? 'Stop' : 'Start' }}</button>
                     </div>
                 </div>
             </form>
@@ -107,6 +107,7 @@
 
                 try {
                     let response = await this.entryHttp.update(this.entryId, data);
+                    this.$emit('end-entry', data);
                     console.log("Stored time entry");
                 } catch (error) {
                     console.error(error);
@@ -125,13 +126,16 @@
                         this.minutes = 0;
                     }
 
-                    this.entryDuration = `${this.hours}:${this.minutes}:${this.seconds}`;
-                    window.setTimeout(this.countTimer, 1000);
+                    this.entryDuration = `${this.pad(this.hours, 2)}:${this.pad(this.minutes, 2)}:${this.pad(this.seconds, 2)}`;
+                    window.setTimeout(this.countTimer, 10);
                 }
-            }
+            },
 
-
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            },
         }
-
     }
 </script>

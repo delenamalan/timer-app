@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <timer :projects="projects"></timer>
+        <timer @end-entry="addTimeEntry" :projects="projects"></timer>
         <div class="row justify-content-center">
                 <table class="table table-bordered">
             <thead>
@@ -75,9 +75,7 @@
                             'project': entry.project_id in this.projects ? this.projects[entry.project_id].name : '',
                             'start': moment(entry.start),
                             'end': moment(entry.end),
-                            'duration': moment.utc(
-                                moment(entry.end).diff(moment(entry.start))
-                            ).format('h:ss'),
+                            'duration': moment.duration(moment(entry.end).diff(moment(entry.start))).format('HH:mm:ss', {trim: false}),
                        };
                     });
                 } catch (error) {
@@ -94,6 +92,21 @@
                     console.error(error);
                 }
             },
+
+            addTimeEntry(data) {
+                let start = moment(data.start);
+                let end = moment(data.end);
+                let newEntry = {
+                    'title': data.title,
+                    'project_id': data.project_id,
+                    'project': data.project_id in this.projects ? this.projects[data.project_id].name : '',
+                    'start': start,
+                    'end': end,
+                    'duration': moment.duration(end.diff(start)).format('HH:mm:ss', {trim: false}),
+                };
+
+                this.entries.unshift(newEntry);
+            }
 
         },
 
